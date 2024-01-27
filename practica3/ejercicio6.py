@@ -1,2 +1,5 @@
 frase = input("Ingresa una frase: ")
 caracteres = list(frase)
+fraserev = list(reversed(caracteres))
+frase_reves= ''.join(fraserev)
+print("La frase al revés es:", frase_reves)
