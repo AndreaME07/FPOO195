@@ -21,3 +21,4 @@ class Armas:
         cargador= 25
         cargador= cargador + municion
         print("Arma recargada "+ str(cargador)+"%") 
+        
