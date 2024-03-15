@@ -26,21 +26,21 @@ Arma= Armas()
 
 #usamos los atributos de spartan
 print("======= EL OBJETO SPARTAN CONTIENE =======")
-print(Spartan.nombre )
-print(Spartan.especie )
-print(Spartan.altura )
+print(Spartan.getNombre())
+print(Spartan.getEspecie())
+print(Spartan.getAltura())
 print("")
 
 #usamos los atributos de nemesis
 print("======= EL OBJETO NEMESIS CONTIENE =======")
-print(Nemesis.nombre )
-print(Nemesis.especie )
-print(Nemesis.altura )
+print(Nemesis.getNombre())
+print(Nemesis.getEspecie())
+print(Nemesis.getAltura())
 print("")
 
 #Usamos los metodos del spartan
 print("====== METODOS DEL OBJETO SPARTAN ======")
-Spartan.correr(False)
+Spartan.correr(True)
 Spartan.lanzarGranada()
 print("")
 
@@ -51,5 +51,10 @@ Nemesis.lanzarGranada()
 print("")
 
 #Usamos los metodos del arma
-Arma.seleccionarArma(Spartan.nombre)
+Arma.seleccionarArma(Spartan.getNombre())
 Arma.recargarArma(65)
+
+#Usamos los metodos del arma
+Arma.seleccionarArma(Nemesis.getNombre())
+Arma.recargarArma(65)
+
