@@ -1,6 +1,14 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+from Controlador import *
+
+# Crear un objeto para jalar todo lo de la clase de controlador
+objControlador=Controlador()
+
+#función para ejecutar un boton y se guarde los datos en los inputs
+def ejecutaInsert():
+    objControlador.insertUsuario(var1.get(),var2.get(),var3.get())
 
 # 1 crear una ventana
 Ventana = Tk()
@@ -39,7 +47,10 @@ Label(pestana1, text="Correo: ", fg="#1769F8").pack()
 Entry(pestana1, textvariable=var2).pack()
 
 var3=tk.StringVar()
-Label(pestana1, text="Contraeeña: ", fg="#1769F8").pack()
+Label(pestana1, text="Contraseña: ", fg="#1769F8").pack()
 Entry(pestana1, textvariable=var3).pack()
+
+#botón para generar el usuario y salgan los datos
+Button(pestana1,text="Guardar usuario", command=ejecutaInsert).pack()
 
 Ventana.mainloop()
