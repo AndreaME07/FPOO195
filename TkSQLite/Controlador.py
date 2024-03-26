@@ -30,12 +30,61 @@ class Controlador:
             conexion.close()
         #cursor nos ayuda a poder ejecutar el programa para poder hacer la conexion
         else: 
-            cursor = conexion.cursor()
-            conH= self.encryptapass(cont)
-            datos=(nom, corr, conH)
-            sqlInsert="Insert into tbusuarios(nombre,correo,contra) values (?,?,?)"
-            
-            cursor.execute(sqlInsert,datos)
-            conexion.commit()
-            conexion.close
-            messagebox.showinfo("Éxito","Eso tilin!!!")
+            try:
+                cursor = conexion.cursor()
+                conH= self.encryptapass(cont)
+                datos=(nom, corr, conH)
+                sqlInsert="Insert into tbusuarios(nombre,correo,contra) values (?,?,?)"
+                cursor.execute(sqlInsert,datos)
+                conexion.commit()
+                conexion.close
+                messagebox.showinfo("Éxito","Eso tilin!!!")
+            except sqlite3.OperationalError:
+                print("Nose pudo ejecutar")
+
+#--------BUSCAR UN SÓLO USUARIO-----------------------------------------------------------------------------------------------------------
+    def buscarUsuario(self,id):
+        conex = self.conexion()
+        #crea una 
+        if(id== ''):
+            messagebox.showwarning("Cuidado", "inputs vacios no seas tibio")
+            conex.close()
+        else:
+            try:
+                cursor = conex.cursor()
+                sqlSelect= "select * from tbusuarios where id=" +id
+                cursor.execute(sqlSelect)
+                usuario=cursor.fetchall()
+                conex.close()
+                return usuario
+            except sqlite3.OperationalError:
+                print("No se pudo ejecutar")
+# #--------CONSULTAR LOS USUARIOS-----------------------------------------------------------------------------------------------------------
+#     def consultarUsuarios(self, nom, correo):
+#         conexion = self.conexion()
+#         cursor = conexion.cursor()
+#         cursor.execute("SELECT * FROM tbusuarios WHERE nombre=? AND correo=?", (nom, correo,))
+#         usuarios = cursor.fetchall()
+#         conexion.close()
+#         if usuarios:
+#             messagebox.showinfo("Usuarios encontrados", "\n".join([f"Nombre: {usuario[0]}, Correo: {usuario[1]}, Contraseña: {usuario[2]}" for usuario in usuarios]))
+#         else:
+#             messagebox.showinfo("Usuarios no encontrados", "No se encontraron usuarios con esos datos.")
+# #-----------EDITAR USUARIO--------------------------------------------------------------------------------------------------------
+#     def editarUsuario(self, nom, corr, cont):
+#         conexion = self.conexion()
+#         cursor = conexion.cursor()
+#         conH = self.encryptapass(cont)
+#         datos = (nom, conH, corr)  # Corregido el orden de los parámetros
+#         cursor.execute("UPDATE tbusuarios SET nombre=?, contra=? WHERE correo=?", datos)  # Corregido el orden de los parámetros
+#         conexion.commit()
+#         conexion.close()
+#         messagebox.showinfo("Éxito", "Usuario actualizado correctamente.")
+# #-----------ELIMINAR USUARIOS--------------------------------------------------------------------------------------------------------
+#     def eliminarUsuario(self, nom, corr):
+#         conexion = self.conexion()
+#         cursor = conexion.cursor()
+#         cursor.execute("DELETE FROM tbusuarios WHERE nombre=? AND correo=?", (nom, corr,))
+#         conexion.commit()
+#         conexion.close()
+#         messagebox.showinfo("Éxito", "Usuario eliminado correctamente.")
