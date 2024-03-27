@@ -59,32 +59,38 @@ class Controlador:
                 return usuario
             except sqlite3.OperationalError:
                 print("No se pudo ejecutar")
-# #--------CONSULTAR LOS USUARIOS-----------------------------------------------------------------------------------------------------------
-#     def consultarUsuarios(self, nom, correo):
-#         conexion = self.conexion()
-#         cursor = conexion.cursor()
-#         cursor.execute("SELECT * FROM tbusuarios WHERE nombre=? AND correo=?", (nom, correo,))
-#         usuarios = cursor.fetchall()
-#         conexion.close()
-#         if usuarios:
-#             messagebox.showinfo("Usuarios encontrados", "\n".join([f"Nombre: {usuario[0]}, Correo: {usuario[1]}, Contraseña: {usuario[2]}" for usuario in usuarios]))
-#         else:
-#             messagebox.showinfo("Usuarios no encontrados", "No se encontraron usuarios con esos datos.")
+                
+# #--------CARGAR A LA VISTA TODOS LOS USUARIOS-----------------------------------------------------------------------------------------------------------
+# Función para cargar todos los usuarios en la tabla
+    def consultarUsuarios(self):
+            conex = self.conexion()
+            try:
+                cursor = conex.cursor()
+                cursor.execute("SELECT id, nombre, correo FROM tbusuarios")
+                usuarios = cursor.fetchall()
+                conex.close()
+                return usuarios
+            except sqlite3.OperationalError as error:
+                print("Error al consultar usuarios:", error)
+
 # #-----------EDITAR USUARIO--------------------------------------------------------------------------------------------------------
-#     def editarUsuario(self, nom, corr, cont):
-#         conexion = self.conexion()
-#         cursor = conexion.cursor()
-#         conH = self.encryptapass(cont)
-#         datos = (nom, conH, corr)  # Corregido el orden de los parámetros
-#         cursor.execute("UPDATE tbusuarios SET nombre=?, contra=? WHERE correo=?", datos)  # Corregido el orden de los parámetros
-#         conexion.commit()
-#         conexion.close()
-#         messagebox.showinfo("Éxito", "Usuario actualizado correctamente.")
-# #-----------ELIMINAR USUARIOS--------------------------------------------------------------------------------------------------------
-#     def eliminarUsuario(self, nom, corr):
-#         conexion = self.conexion()
-#         cursor = conexion.cursor()
-#         cursor.execute("DELETE FROM tbusuarios WHERE nombre=? AND correo=?", (nom, corr,))
-#         conexion.commit()
-#         conexion.close()
-#         messagebox.showinfo("Éxito", "Usuario eliminado correctamente.")
+    def editarUsuario(self, nuevo_nombre, nuevo_correo, nueva_contra, id_usuario):
+        try:
+            conexion = sqlite3.connect("C:/Users/T480/OneDrive/Documentos/GitHub/FPOO/TkSQLite/db195.db")
+            cursor = conexion.cursor()
+            nueva_contra = self.encryptapass(nueva_contra)
+            cursor.execute("UPDATE tbusuarios SET nombre=?, correo=?, contra=? WHERE id=?", (id_usuario, nuevo_nombre, nuevo_correo, nueva_contra, ))
+            conexion.commit()
+            conexion.close()
+            messagebox.showinfo("Éxito", "Usuario editado correctamente")
+        except sqlite3.Error as error:
+            print("Error al editar el usuario:", error)
+
+#-----------ELIMINAR USUARIOS--------------------------------------------------------------------------------------------------------
+    def eliminarUsuario(self, nom, corr):
+        conexion = self.conexion()
+        cursor = conexion.cursor()
+        cursor.execute("DELETE FROM tbusuarios WHERE nombre=? AND correo=?", (nom, corr,))
+        conexion.commit()
+        conexion.close()
+        messagebox.showinfo("Éxito", "Usuario eliminado correctamente.")
