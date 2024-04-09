@@ -40,7 +40,7 @@ class Controlador:
                 conexion.close
                 messagebox.showinfo("Éxito","Eso tilin!!!")
             except sqlite3.OperationalError:
-                print("Nose pudo ejecutar")
+                print("No se pudo ejecutar")
 
 #--------BUSCAR UN SÓLO USUARIO-----------------------------------------------------------------------------------------------------------
     def buscarUsuario(self,id):
@@ -87,10 +87,12 @@ class Controlador:
             print("Error al editar el usuario:", error)
 
 #-----------ELIMINAR USUARIOS--------------------------------------------------------------------------------------------------------
-    def eliminarUsuario(self, nom, corr):
+    def eliminarUsuario(self, nombree, correoe):
         conexion = self.conexion()
         cursor = conexion.cursor()
-        cursor.execute("DELETE FROM tbusuarios WHERE nombre=? AND correo=?", (nom, corr,))
+        cursor.execute("DELETE FROM tbusuarios WHERE nombre=? AND correo=?", (nombree, correoe,))
         conexion.commit()
         conexion.close()
         messagebox.showinfo("Éxito", "Usuario eliminado correctamente.")
+
+#--------------GENERAR REPORTES-------------------------------------------------------------------------------------

@@ -2,9 +2,12 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 from Controlador import *
+from GeneradorPDF import *
+import os
 
 # Crear un objeto para jalar todo lo de la clase de controlador
 objControlador=Controlador()
+objPDF= GeneradorPDF()
 
 #función para ejecutar un boton y se guarde los datos en los inputs
 def ejecutaInsert():
@@ -46,6 +49,17 @@ def cargarUsuarios():
 def eliminarUsuario():
     objControlador.eliminarUsuario(var1.get(), var2.get())
     
+#funcion para gener los pdf
+def ejecutaPDF():
+    if varTitulo == "":
+        messagebox.showwarning("Importante", "Escribe un nombre del PDF")
+    else:
+        objPDF.add_page()
+        objPDF.chapter_body()
+        objPDF.output(varTitulo.get()+".pdf")#crea el archivo y le da el nombre al archivo
+        rutaPDF = "C:/Users/T480/OneDrive/Documentos/GitHub/FPOO/TkSQLite/GeneradorPDF.py"+varTitulo.get()+".pdf"
+        messagebox.showinfo("Archivo creado", "PDF disponible en carpeta")
+        os.system(f"start {rutaPDF}")
 # 1 crear una ventana
 Ventana = Tk()
 Ventana.title("CRUD de usuarios")
@@ -61,6 +75,7 @@ pestana2= ttk.Frame(panel)
 pestana3= ttk.Frame(panel)
 pestana4= ttk.Frame(panel)
 pestana5= ttk.Frame(panel)
+pestana6= ttk.Frame(panel)
 
 #4. Agregamos las pestañas
 
@@ -69,6 +84,7 @@ panel.add(pestana2,text="Buscar Usuario")
 panel.add(pestana3,text="Consultar Usuarios")
 panel.add(pestana4,text="Editar Usuario")
 panel.add(pestana5,text="Eliminar Usuario")
+panel.add(pestana6, text="Reporte de Usuario")
 
 
 #5. Pestaña 1: Formulario de Insert
@@ -149,15 +165,24 @@ Button(pestana4, text="Editar Usuario", command=editarUsuario).pack()
 #-----------------------------------ELIMINAR USUARIO--------------------------------------------------------------------------------
 Label(pestana5, text="Eliminar usuario", fg="#9617C6", font=("Times New Roman", 18)).pack()
 
-var1 = tk.StringVar()
+eliminar1 = tk.StringVar()
 Label(pestana5, text="Nombre: ", fg="#1769F8").pack()
-Entry(pestana5, textvariable=var1).pack()
+Entry(pestana5, textvariable=eliminar1).pack()
 
-var2 = tk.StringVar()
+eliminar2 = tk.StringVar()
 Label(pestana5, text="Correo: ", fg="#1769F8").pack()
-Entry(pestana5, textvariable=var2).pack()
+Entry(pestana5, textvariable=eliminar2).pack()
 
 Button(pestana5, text="Eliminar", command=eliminarUsuario).pack()
+
+#-----------------------------------GENERAR REPORTES----------------------------------------------------------------
+Label(pestana6, text="Exportar PDF", fg="#9617C6", font=("Times New Roman", 18)).pack()
+
+varTitulo= tk.StringVar()
+Label(pestana6, text="Escribe el titulo del reporte", fg="#1769F8").pack()
+Entry(pestana6, textvariable=varTitulo).pack()
+
+Button(pestana6, text="Crear PDF", command=ejecutaPDF).pack()
 
 
 Ventana.mainloop()
