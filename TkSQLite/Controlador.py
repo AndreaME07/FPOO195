@@ -22,7 +22,7 @@ class Controlador:
         # hashpw nos ayuda a encriptar la contraseña, es la encryptación
         passHash= bcrypt.hashpw(passPlana, sal)
         return passHash
-    #3.Creamos uno para el insert de usuario
+    #3.Creamos uno para el insert de usuario----------------------------------------------------------------------
     def insertUsuario(self,nom,corr,cont):
         conexion=self.conexion()
         if ( nom== "" or corr== "" or cont== ""):
@@ -43,22 +43,24 @@ class Controlador:
                 print("No se pudo ejecutar")
 
 #--------BUSCAR UN SÓLO USUARIO-----------------------------------------------------------------------------------------------------------
-    def buscarUsuario(self,id):
+    def buscarUsuario(self, nombre):
         conex = self.conexion()
-        #crea una 
-        if(id== ''):
-            messagebox.showwarning("Cuidado", "inputs vacios no seas tibio")
+        # Verifica si el nombre está vacío
+        if nombre == '':
+            messagebox.showwarning("Cuidado", "Inputs vacíos, por favor ingresa un nombre válido.")
             conex.close()
         else:
             try:
                 cursor = conex.cursor()
-                sqlSelect= "select * from tbusuarios where id=" +id
-                cursor.execute(sqlSelect)
-                usuario=cursor.fetchall()
+                # Utiliza el nombre en la consulta SQL
+                sqlSelect = "SELECT * FROM tbusuarios WHERE nombre = ?"
+                cursor.execute(sqlSelect, (nombre,))
+                usuario = cursor.fetchall()
                 conex.close()
                 return usuario
             except sqlite3.OperationalError:
-                print("No se pudo ejecutar")
+                print("No se pudo ejecutar la consulta.")
+
                 
 # #--------CARGAR A LA VISTA TODOS LOS USUARIOS-----------------------------------------------------------------------------------------------------------
 # Función para cargar todos los usuarios en la tabla
@@ -74,17 +76,18 @@ class Controlador:
                 print("Error al consultar usuarios:", error)
 
 # #-----------EDITAR USUARIO--------------------------------------------------------------------------------------------------------
-    def editarUsuario(self, nuevo_nombre, nuevo_correo, nueva_contra, id_usuario):
+    def editarUsuario(self, nombre_usuario, nuevo_nombre, nuevo_correo, nueva_contra):
         try:
             conexion = sqlite3.connect("C:/Users/T480/OneDrive/Documentos/GitHub/FPOO/TkSQLite/db195.db")
             cursor = conexion.cursor()
             nueva_contra = self.encryptapass(nueva_contra)
-            cursor.execute("UPDATE tbusuarios SET nombre=?, correo=?, contra=? WHERE id=?", (id_usuario, nuevo_nombre, nuevo_correo, nueva_contra, ))
+            cursor.execute("UPDATE tbusuarios SET nombre=?, correo=?, contra=? WHERE nombre=?", (nuevo_nombre, nuevo_correo, nueva_contra, nombre_usuario))
             conexion.commit()
             conexion.close()
             messagebox.showinfo("Éxito", "Usuario editado correctamente")
         except sqlite3.Error as error:
             print("Error al editar el usuario:", error)
+
 
 #-----------ELIMINAR USUARIOS--------------------------------------------------------------------------------------------------------
     def eliminarUsuario(self, nombree, correoe):

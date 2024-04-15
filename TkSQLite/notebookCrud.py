@@ -22,22 +22,24 @@ def busUsuario():
         for i in usuarioBD:
             usuarioTex.insert(END,f"ID:{i[0]}\nNombre: {i[1]}\nCorreo: {i[2]}\n")
         print(usuarioBD)
-#función para editar usuario
-def editarUsuario(self, id_usuario, nuevo_nombre, nuevo_correo, nueva_contra):
-        if id_usuario == '' or nuevo_nombre == '' or nuevo_correo == '' or nueva_contra == '':
-            messagebox.showwarning("Cuidado", "Todos los campos son obligatorios")
-        else:
-            try:
-                conexion = self.conexion()
-                cursor = conexion.cursor()
-                nueva_contra = self.encryptapass(nueva_contra)
-                cursor.execute("UPDATE tbusuarios SET nombre=?, correo=?, contra=? WHERE id=?", (nuevo_nombre, nuevo_correo, nueva_contra, id_usuario))
-                conexion.commit()
-                conexion.close()
-                messagebox.showinfo("Éxito", "Usuario editado correctamente")
-            except sqlite3.Error as error:
-                print("Error al editar el usuario:", error)
-#función para cargar todos los usuarios y no sólo uno
+#función para editar usuario---------------------------------------------------------------------------------------
+def editarUsuario(self, nombre_usuario, nuevo_nombre, nuevo_correo, nueva_contra):
+    if nombre_usuario == '' or nuevo_nombre == '' or nuevo_correo == '' or nueva_contra == '':
+        messagebox.showwarning("Cuidado", "Todos los campos son obligatorios")
+    else:
+        try:
+            conexion = self.conexion()
+            cursor = conexion.cursor()
+            nueva_contra = self.encryptapass(nueva_contra)
+            # Busca el usuario por su nombre en lugar de por ID
+            cursor.execute("UPDATE tbusuarios SET nombre=?, correo=?, contra=? WHERE nombre=?", (nuevo_nombre, nuevo_correo, nueva_contra, nombre_usuario))
+            conexion.commit()
+            conexion.close()
+            messagebox.showinfo("Éxito", "Usuario editado correctamente")
+        except sqlite3.Error as error:
+            print("Error al editar el usuario:", error)
+
+#función para cargar todos los usuarios y no sólo uno----------------------------------------------------------------
 def cargarUsuarios():
     for record in tree.get_children():
         tree.delete(record)
@@ -45,7 +47,7 @@ def cargarUsuarios():
     for usuario in usuarios:
         tree.insert("", "end", values=usuario)
     
-#funcion para eliminar usuario
+#funcion para eliminar usuario--------------------------------------------------------------------------------------
 def eliminarUsuario():
     objControlador.eliminarUsuario(var1.get(), var2.get())
     
@@ -105,14 +107,14 @@ Entry(pestana1, textvariable=var3).pack()
 #botón para generar el usuario y salgan los datos
 Button(pestana1,text="Guardar usuario", command=ejecutaInsert).pack()
 
-#---------------------------2DA PARTE------------------------------------------------------------------------------
+#---------------------------2DA PARTE BUSCAR 1 SÓLO USUARIO------------------------------------------------------------------------------
 
 #6. Pestaña 2: Buscar Usuario
 Label(pestana2, text="Buscar usuario ", fg="#9617C6", font=("Times New Roman", 18)).pack()
 
 
 varBus= tk.StringVar()
-Label(pestana2, text="Id: ",  fg="#1769F8").pack()
+Label(pestana2, text="Nombre de usuario: ",  fg="#1769F8").pack()
 Entry(pestana2,  textvariable=varBus).pack()
 
 #botón para generar el usuario y salgan los datos
@@ -143,9 +145,9 @@ Button(pestana3, text="Cargar Usuarios", command=cargarUsuarios).pack()
 
 #----------------------------Editar usuario------------------------------------------------------------------------
 # Para la pestaña de editar usuario
-Id = tk.StringVar()
-Label(pestana4, text="ID: ", fg="#1769F8").pack()
-Entry(pestana4, textvariable=Id).pack()
+nombreu = tk.StringVar()
+Label(pestana4, text="Nombre actual de usuario: ", fg="#1769F8").pack()
+Entry(pestana4, textvariable=nombreu).pack()
 
 NuevoNombre = tk.StringVar()
 Label(pestana4, text="Nuevo Nombre: ", fg="#1769F8").pack()
